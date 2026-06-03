@@ -1,0 +1,201 @@
+1. 
+
+SELECT s1.product_id,s1.sale_date,SUM(s2.amount) AS running_total FROM Sales s1 JOIN Sales s2 ON s1.product_id=s2.product_id AND s2.sale_date<=s1.sale_date GROUP BY s1.product_id,s1.sale_date ORDER BY s1.product_id,s1.sale_date;
+
+
+2. 
+SELECT p.product_name,c.color,s.size FROM Products p CROSS JOIN Colors c CROSS JOIN Sizes s;
+
+SELECT COUNT(*) FROM Products p CROSS JOIN Customers c;
+
+SELECT p.product_name,m.month_name FROM Products p CROSS JOIN Months m;
+
+
+SELECT c.customer_name,p.product_name FROM Customers c CROSS JOIN Products p LEFT JOIN Orders o ON c.customer_id=o.customer_id AND p.product_id=o.product_id WHERE o.order_id IS NULL;
+
+
+SELECT p1.product_name,p2.product_name FROM Products p1 CROSS JOIN Products p2 WHERE p1.product_id<p2.product_id;
+
+SELECT * FROM Products p,Customers c;
+
+SELECT * FROM Customers c CROSS JOIN Orders o WHERE c.customer_id=o.customer_id;
+
+
+SELECT e1.*
+FROM Employees e1
+JOIN Employees e2
+ON e1.salary < e2.salary
+GROUP BY e1.emp_id, e1.salary
+HAVING COUNT(DISTINCT e2.salary) = 2;
+
+SELECT p1.name AS person1,
+       p2.name AS person2,
+       p1.address,
+       p2.address
+FROM People p1
+JOIN People p2
+ON SUBSTRING_INDEX(p1.name, ' ', -1) = SUBSTRING_INDEX(p2.name, ' ', -1)
+AND p1.address <> p2.address
+AND p1.id < p2.id;
+
+SELECT e.emp_name, e.join_date,
+       m.emp_name, m.join_date
+FROM Employees e
+JOIN Employees m
+ON e.manager_id = m.emp_id;
+
+
+SELECT e.emp_name AS employee,
+       e.join_date AS emp_join_date,
+       m.emp_name AS manager,
+       m.join_date AS manager_join_date
+FROM Employees e
+JOIN Employees m
+ON e.manager_id = m.emp_id
+WHERE e.join_date < m.join_date;
+
+
+SELECT e1.emp_name, e1.salary
+FROM Employees e1
+JOIN Employees e2
+ON e1.salary < e2.salary
+ORDER BY e1.salary DESC
+LIMIT 1;
+
+
+SELECT DISTINCT e1.salary
+FROM Employees e1
+JOIN Employees e2
+ON e1.salary < e2.salary
+ORDER BY e1.salary DESC
+LIMIT 1 OFFSET 0;
+
+SELECT MAX(e1.salary) AS second_highest_salary
+FROM Employees e1
+WHERE e1.salary < (
+    SELECT MAX(salary) FROM Employees
+);
+
+
+SELECT MAX(e1.salary) AS second_highest_salary
+FROM Employees e1
+JOIN Employees e2
+ON e1.salary < e2.salary;
+
+
+SELECT DISTINCT e1.salary
+FROM Employees e1
+JOIN Employees e2
+ON e1.salary < e2.salary
+ORDER BY e1.salary DESC
+LIMIT 1;
+
+SELECT MAX(e1.salary) AS second_highest_salary
+FROM Employees e1
+WHERE e1.salary < (
+    SELECT MAX(e2.salary) FROM Employees e2
+);
+
+
+SELECT p1.product_name AS product1,
+       p2.product_name AS product2,
+       p1.price
+FROM Products p1
+JOIN Products p2
+ON p1.price = p2.price
+AND p1.product_id < p2.product_id;
+
+
+SELECT p1.product_name AS product1,
+       p2.product_name AS product2,
+       p1.price
+FROM Products p1
+JOIN Products p2
+ON p1.price = p2.price
+AND p1.product_id < p2.product_id;
+
+SELECT l1.user_id,
+       l1.login_date AS current_day,
+       l2.login_date AS previous_day
+FROM LoginLog l1
+JOIN LoginLog l2
+ON l1.user_id = l2.user_id
+AND l1.login_date = DATE_ADD(l2.login_date, INTERVAL 1 DAY);
+
+
+SELECT DISTINCT e1.emp_name, e1.department, e1.salary
+FROM Employees e1
+JOIN Employees e2
+ON e1.department = e2.department
+AND e1.salary <> e2.salary;
+
+# SQL Joins Practice Questions: Inner,
+#Left, Right &amp; Full Join
+
+
+
+SELECT c.customer_name,p.product_name FROM Customers c INNER JOIN Products p ON c.customer_id=p.customer_id;
+
+SELECT c.customer_name,p.product_name,e.emp_name FROM Customers c INNER JOIN Products p ON c.customer_id=p.customer_id INNER JOIN Employees e ON p.supplier_id=e.emp_id;
+
+SELECT c.first_name,p.product_name,e.emp_name FROM customers c INNER JOIN products p ON c.customer_id=p.product_id INNER JOIN employees e ON p.record_id=e.emp_id;
+
+select e.emp_name, e1.department from employees e inner join employees e1 on e.emp_id = e1.emp_id;
+
+SELECT c.first_name,p.product_name FROM customers c INNER JOIN products p ON c.customer_id=p.product_id;
+
+select * from customers c  join products p on c.customer_id = p.product_id where c.customer_id is not null;
+
+
+select c.first_name,count(p.product_id) as total_products from customers c inner join products p on c.customer_id=p.product_id group by c.first_name;
+
+
+
+select * from employees e inner join products p on e.emp_id=p.supplier_id;
+
+select c.customer_name,p.product_name,p.last_updated from customers c inner join products p on c.customer_id=p.customer_id where p.last_updated between '2024-01-01' and '2024-01-31';
+
+
+select * from customers c inner join products p on c.customer_id=p.customer_id;
+
+select c.customer_name,p.product_name from customers c inner join products p on c.customer_id=p.customer_id;
+
+
+select p.product_name from products p inner join customers c on p.customer_id=c.customer_id where c.customer_id=1;
+
+select c.first_name,p.product_name from customers c left join products p on c.customer_id=p.product_id;
+
+select c.customer_name from customers c left join products p on c.customer_id=p.customer_id where p.customer_id is null;
+
+select d.department_name,e.emp_name from departments d left join employees e on d.department_id=e.department_id;
+
+
+select p.product_name,r.review from products p left join reviews r on p.product_id=r.product_id;
+
+
+select c.customer_name,p.product_name,e.emp_name from customers c left join products p on c.customer_id=p.customer_id left join employees e on p.supplier_id=e.emp_id;
+
+
+select c.customer_name,p.product_name,e.emp_name from customers c left join products p on c.customer_id=p.customer_id left join employees e on p.supplier_id=e.emp_id;
+
+
+select m.emp_name as manager,e.emp_name as employee from employees m left join employees e on m.emp_id=e.manager_id;
+
+select p.product_name,c.customer_name from customers c right join products p on c.customer_id=p.customer_id;
+
+select p.product_name,c.customer_name from products p left join customers c on p.customer_id=c.customer_id;
+
+
+select c.course_name,e.emp_name from employees e right join courses c on e.emp_id=c.teacher_id;
+
+
+select p.product_name from customers c right join products p on c.customer_id=p.customer_id where c.customer_id is null;
+
+select e.emp_name,p.product_name from employees e right join products p on e.emp_id=p.supplier_id;
+
+select p.category,sum(s.amount) from sales s right join products p on s.product_id=p.product_id group by p.category;
+
+
+select p.product_name,c.customer_name from customers c right join products p on c.product_id=p.product_id;
+
+

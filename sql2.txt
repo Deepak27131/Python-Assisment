@@ -1,0 +1,289 @@
+1. Retrieve a list of all Student Names and the Courses they have enrolled
+in.
+
+ select u.name ,c.course_name from users u join enrollment e on u.user_id = e.user_id join course c on e.course_id = c.course_id;
+
+
+2. Display the Names and Cities of students who have a 'Completed'
+payment status.
+
+ select u.name , u.city from users u join payment p on u.user_id = p.user_id where payment_status = 'completed';
+
+3. List every Course Name along with the Instructor assigned to teach it.
+
+ select c.course_name , i.name from course c join course_instructor ci on ci.course_id = c.course_id join instructors i on i.instructor_id = ci.instructor_id;
+
+4. Find the names of students from 'Jaipur' who enrolled specifically in the
+'SQL' course.
+
+SELECT 
+    u.name
+FROM users u
+JOIN enrollment e 
+    ON u.user_id = e.user_id
+JOIN course c 
+    ON c.course_id = e.course_id
+WHERE u.city = 'Jaipur'
+AND c.course_name = 'SQL Basics';
+
+5. List all users whose Payment Amount matches the original Price of the
+course.
+
+SELECT 
+    u.name,
+    c.course_name,
+    p.amount,
+    c.price
+FROM users u
+JOIN payment p 
+    ON u.user_id = p.user_id
+JOIN course c 
+    ON p.course_id = c.course_id
+WHERE p.amount = c.price;
+
+1. Generate a report containing the User Name, Course Name, Instructor Name, and Enrollment Date
+
+SELECT 
+    u.name AS user_name,
+    c.course_name,
+    i.name AS instructor_name,
+    e.enroll_date
+FROM users u
+JOIN enrollment e 
+    ON u.user_id = e.user_id
+JOIN course c 
+    ON e.course_id = c.course_id
+JOIN course_instructor ci 
+    ON c.course_id = ci.course_id
+JOIN instructors i 
+    ON ci.instructor_id = i.instructor_id;
+
+2. Show the names of students and their Instructors for those who made payments for the 'Java' course.
+
+SELECT 
+    u.name AS student_name,
+    i.name AS instructor_name
+FROM users u
+JOIN payment p 
+    ON u.user_id = p.user_id
+JOIN course c 
+    ON p.course_id = c.course_id
+JOIN course_instructor ci 
+    ON c.course_id = ci.course_id
+JOIN instructors i 
+    ON ci.instructor_id = i.instructor_id
+WHERE c.course_name = 'Java Programming';
+
+
+3. Identify which Instructors are teaching students located in 'Delhi'.
+SELECT DISTINCT
+    i.name AS instructor_name
+FROM users u
+JOIN enrollment e 
+    ON u.user_id = e.user_id
+JOIN course c 
+    ON e.course_id = c.course_id
+JOIN course_instructor ci 
+    ON c.course_id = ci.course_id
+JOIN instructors i 
+    ON ci.instructor_id = i.instructor_id
+WHERE u.city = 'Delhi';
+
+4. Create a list showing User Name, Course Name, Price, and Payment Status.
+SELECT 
+    u.name,
+    c.course_name,
+    c.price,
+    p.payment_status
+FROM users u
+JOIN payment p 
+    ON u.user_id = p.user_id
+JOIN course c 
+    ON p.course_id = c.course_id;
+
+5. Display the Expertise and Names of instructors teaching the courses that 'Amit' has enrolled in.
+SELECT 
+    i.name AS instructor_name,
+    i.expertise
+FROM users u
+JOIN enrollment e 
+    ON u.user_id = e.user_id
+JOIN course c 
+    ON e.course_id = c.course_id
+JOIN course_instructor ci 
+    ON c.course_id = ci.course_id
+JOIN instructors i 
+    ON ci.instructor_id = i.instructor_id
+WHERE u.name = 'Amit Sharma';
+
+Set 3: Complex Logic (5-6 Tables & Filters)
+
+1. Master Audit Report: Write a query to display Student Name, Course Name, Instructor Name, Payment Amount, and Payment Status all in one
+
+row.
+SELECT 
+    u.name AS student_name,
+    c.course_name,
+    i.name AS instructor_name,
+    p.amount,
+    p.payment_status
+FROM users u
+JOIN enrollment e 
+    ON u.user_id = e.user_id
+JOIN course c 
+    ON e.course_id = c.course_id
+JOIN payment p 
+    ON u.user_id = p.user_id 
+    AND c.course_id = p.course_id
+JOIN course_instructor ci 
+    ON c.course_id = ci.course_id
+JOIN instructors i 
+    ON ci.instructor_id = i.instructor_id;
+
+2. Find the names of users and their courses where the payment status is 'Pending', and include the Instructor's Email ID.
+SELECT 
+    u.name,
+    c.course_name,
+    i.email
+FROM users u
+JOIN payment p 
+    ON u.user_id = p.user_id
+JOIN course c 
+    ON p.course_id = c.course_id
+JOIN course_instructor ci 
+    ON c.course_id = ci.course_id
+JOIN instructors i 
+    ON ci.instructor_id = i.instructor_id
+WHERE p.payment_status = 'Pending';
+
+
+3. List all students currently enrolled under the instructor 'Rajesh Kumar'.
+SELECT 
+    u.name AS student_name
+FROM users u
+JOIN enrollment e 
+    ON u.user_id = e.user_id
+JOIN course c 
+    ON e.course_id = c.course_id
+JOIN course_instructor ci 
+    ON c.course_id = ci.course_id
+JOIN instructors i 
+    ON ci.instructor_id = i.instructor_id
+WHERE i.name = 'Rajesh Kumar';
+
+
+
+4. Retrieve a list of courses priced above 1500 where the instructor's name starts with 'Pooja'.
+SELECT 
+    c.course_name,
+    c.price,
+    i.name AS instructor_name
+FROM course c
+JOIN course_instructor ci 
+    ON c.course_id = ci.course_id
+JOIN instructors i 
+    ON ci.instructor_id = i.instructor_id
+WHERE c.price > 1500
+AND i.name LIKE 'Pooja%';
+
+
+
+5. For students in 'Mumbai', list the Instructors and their Expertise for the courses they are taking.
+SELECT 
+    u.name AS student_name,
+    i.name AS instructor_name,
+    i.expertise
+FROM users u
+JOIN enrollment e 
+    ON u.user_id = e.user_id
+JOIN course c 
+    ON e.course_id = c.course_id
+JOIN course_instructor ci 
+    ON c.course_id = ci.course_id
+JOIN instructors i 
+    ON ci.instructor_id = i.instructor_id
+WHERE u.city = 'Mumbai';
+
+
+
+
+Set 4: Real-World Scenarios
+
+1. Identify any student who enrolled in the 'SQL' course but had a 'Failed' payment status.
+SELECT 
+    u.name
+FROM users u
+JOIN enrollment e 
+    ON u.user_id = e.user_id
+JOIN course c 
+    ON e.course_id = c.course_id
+JOIN payment p 
+    ON u.user_id = p.user_id 
+    AND c.course_id = p.course_id
+WHERE c.course_name = 'SQL Basics'
+AND p.payment_status = 'Failed';
+
+2. List students who enrolled in courses taught by 'Anita Sharma' after the date '2024-02-15'.
+SELECT 
+    u.name AS student_name,
+    e.enroll_date
+FROM users u
+JOIN enrollment e 
+    ON u.user_id = e.user_id
+JOIN course c 
+    ON e.course_id = c.course_id
+JOIN course_instructor ci 
+    ON c.course_id = ci.course_id
+JOIN instructors i 
+    ON ci.instructor_id = i.instructor_id
+WHERE i.name = 'Anita Sharma'
+AND e.enroll_date > '2024-02-15';
+
+
+3. Create a list of Student Names and their Instructor Names, but only for transactions where the payment was greater than 2000.
+SELECT 
+    u.name AS student_name,
+    i.name AS instructor_name,
+    p.amount
+FROM users u
+JOIN payment p 
+    ON u.user_id = p.user_id
+JOIN course c 
+    ON p.course_id = c.course_id
+JOIN course_instructor ci 
+    ON c.course_id = ci.course_id
+JOIN instructors i 
+    ON ci.instructor_id = i.instructor_id
+WHERE p.amount > 2000;
+
+
+4. For every student, retrieve their Name, the Course they took, and the exact Date of Payment
+SELECT 
+    u.name AS student_name,
+    c.course_name,
+    p.payment_date
+FROM users u
+JOIN payment p 
+    ON u.user_id = p.user_id
+JOIN course c 
+    ON p.course_id = c.course_id;
+
+
+List all users who took the 'React' course and display whether their
+payment status is 'Completed' or not.
+
+SELECT 
+    u.name AS user_name,
+    c.course_name,
+    p.payment_status
+FROM users u
+JOIN enrollment e 
+    ON u.user_id = e.user_id
+JOIN course c 
+    ON e.course_id = c.course_id
+JOIN payment p 
+    ON u.user_id = p.user_id
+    AND c.course_id = p.course_id
+WHERE c.course_name = 'React';
+
+
